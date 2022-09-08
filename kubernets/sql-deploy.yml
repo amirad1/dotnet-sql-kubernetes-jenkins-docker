@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sqldb
+  labels:
+    app: dot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dot
+      tier: sql
+  template:
+    metadata:
+      labels:
+        app: dot
+        tier: sql
+    spec:
+      containers:
+        - name: sql
+          image: mcr.microsoft.com/mssql/server:2019-latest
+          ports:
+          - containerPort: 1433
+          env:
+          - name: SA_PASSWORD 
+            value: "MyP@ssw0rd123"
+          - name: ACCEPT_EULA
+            value:  "Y"
+          volumeMounts:
+          - name: sql-pv
+            mountPath: /var/opt/mssql/data
+      volumes:
+      - name: sql-pv
+        persistentVolumeClaim:
+          claimName: sql-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sql-pvc
+  labels:
+    app: dot
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi 

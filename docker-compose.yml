@@ -1,0 +1,36 @@
+version: '3.9'
+
+networks:
+  backend:
+  frontend:
+
+services:
+  database:
+    container_name: "SQL-CONT"
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    user: root
+    environment:
+      SA_PASSWORD: "MyP@ssw0rd123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - "../database:/var/opt/mssql/data"
+    networks:
+      backend:
+        aliases:
+          - clientes-db
+    restart: always
+  
+
+  app-web:
+    container_name: "DOTNET-CONT"
+    build: ./clientes
+    ports:
+      - "8080:80"
+    networks:
+      frontend:
+      backend:
+    restart: always
+    depends_on:
+      - database

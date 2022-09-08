@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo "trigger jenkins pipeline"
+
+curl --user amir:amir http://ipaddress/job/jobname/build?token=gitbuild69

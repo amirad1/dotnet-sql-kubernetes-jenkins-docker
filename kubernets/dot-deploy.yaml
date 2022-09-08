@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dot
+  labels:
+    app: dot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dot
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: dot
+        tier: frontend
+    spec:
+      containers:
+      - name: dotnet
+        image: amirad1/test:dotnet
+        ports:
+        - containerPort: 80      
